@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 tonic = { version = "0.8" }
-axum = "0.5"
+axum = {version ="0.5", features = ["headers"]}
 
 prost = "0.11"
 prost-types = "0.11"
