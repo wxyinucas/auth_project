@@ -1,5 +1,5 @@
 [package]
-name = "svc-auth"
+name = "util-auth"
 version = "0.1.0"
 edition = "2021"
 
