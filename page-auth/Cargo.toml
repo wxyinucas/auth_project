@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 tokio = { version = "1", features = ["full"] }
 tonic = { version = "0.8" }
-axum = {version ="0.5", features = ["headers"]}
+axum = { version = "0.5", features = ["headers"] }
 
 prost = "0.11"
 prost-types = "0.11"
@@ -19,3 +19,7 @@ chrono = "0.4"
 
 thiserror = "1"
 util-auth = { path = "../util-auth" }
+util-pb = { path = "../util-pb" }
+
+# TODO Remove this crate later
+sqlx = { version = "0.6", features = ["postgres", "runtime-tokio-rustls"] }

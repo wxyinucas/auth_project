@@ -5,4 +5,6 @@ use thiserror::Error;
 pub enum AuthError {
     #[error("Jwt Error: {0}")]
     JwtError(#[from] jwt::errors::Error),
+
+
 }

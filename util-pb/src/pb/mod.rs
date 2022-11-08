@@ -26,9 +26,9 @@ impl FromRow<'_, PgRow> for User {
 
         let res = Self {
             id,
-            name: name.to_string(),
-            email: email.to_string(),
-            password: password.to_string(),
+            name,
+            email,
+            password,
             auth_level: UserAuthLevel::from(auth_level) as i32,
             status: UserStatus::from(status) as i32,
         };
