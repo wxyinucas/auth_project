@@ -1,4 +1,3 @@
-#[derive(sqlx::FromRow)]
 #[derive(serde::Serialize)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct User {
@@ -11,7 +10,7 @@ pub struct User {
     #[prost(string, tag = "4")]
     pub password: ::prost::alloc::string::String,
     #[prost(enumeration = "UserAuthLevel", tag = "5")]
-    pub auth: i32,
+    pub auth_level: i32,
     #[prost(enumeration = "UserStatus", tag = "6")]
     pub status: i32,
 }

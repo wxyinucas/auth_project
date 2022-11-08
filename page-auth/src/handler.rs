@@ -1,8 +1,9 @@
-use axum::headers::Cookie;
 use axum::http::{HeaderMap, StatusCode};
 use axum::response::Html;
 use axum::Extension;
+use tera::Context;
 
+use crate::error::PageAuthError;
 use crate::structs::InnerState;
 
 fn redirect(url: &str) -> (StatusCode, HeaderMap) {
@@ -26,17 +27,19 @@ pub async fn index() -> (StatusCode, HeaderMap) {
 
 pub async fn login_page(
     Extension(inner_state): Extension<InnerState>,
-) -> Result<Html<String>, String> {
-    todo!() // Error handling
+) -> Result<Html<String>, PageAuthError> {
+    let ctx = Context::new();
+    let res = inner_state.tera.render("login.html", &ctx)?;
+    Ok(Html(res))
 }
 
 pub async fn log(
     Extension(inner_state): Extension<InnerState>,
     form: crate::form::Login,
-) -> Result<(StatusCode, HeaderMap), String> {
+) -> Result<(StatusCode, HeaderMap), PageAuthError> {
     todo!()
 }
 
-pub async fn log_out() -> Result<(StatusCode, HeaderMap), String> {
+pub async fn log_out() -> Result<(StatusCode, HeaderMap), PageAuthError> {
     todo!()
 }

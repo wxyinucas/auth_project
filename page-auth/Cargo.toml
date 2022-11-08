@@ -17,4 +17,5 @@ serde = { version = "1", features = ["derive"] }
 tera = "1"
 chrono = "0.4"
 
+thiserror = "1"
 util-auth = { path = "../util-auth" }
