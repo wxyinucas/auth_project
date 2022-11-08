@@ -33,6 +33,16 @@ async fn main() {
 // TODO 重新放在一个地方
 pub struct Auth(Claims);
 
+/* TODO: 重新写一个
+If the extractor succeeds the value will be discarded and the inner service will be called.
+If the extractor fails the rejection will be returned and the inner service will not be called.
+
+This can be used to perform validation of requests if the validation doesn’t produce any useful output,
+and run the extractor for several handlers without repeating it in the function signature.
+
+Note that if the extractor consumes the request body, as String or Bytes does,
+an empty body will be left in its place. Thus wont be accessible to subsequent extractors or handlers
+ */
 #[tonic::async_trait]
 impl<B> FromRequest<B> for Auth
 where

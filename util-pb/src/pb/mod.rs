@@ -12,15 +12,7 @@ impl FromRow<'_, PgRow> for User {
         let name: String = row.get("name");
         let email: String = row.get("email");
         let password: String = row.get("password");
-        // let auth_level = match row.get("auth_level") {
-        //     UserAuthLevel::Admin => 0,
-        //     UserAuthLevel::Customer => 1,
-        // };
-        // let status = match row.get("status") {
-        //     UserStatus::Active => 0,
-        //     UserStatus::Freeze => 1,
-        //     UserStatus::Dropped => 2,
-        // };
+
         let auth_level: AuthLevel = row.get("auth_level"); // TODO 抄的好呀！reservation 和 全局搜索。
         let status: Status = row.get("status"); // TODO 自己怎么看doc 能学会？试试写一个最短路径。
 
@@ -29,7 +21,7 @@ impl FromRow<'_, PgRow> for User {
             name,
             email,
             password,
-            auth_level: UserAuthLevel::from(auth_level) as i32,
+            auth_level: UserAuthLevel::from(auth_level) as i32, // TODO 本质上不就是一个映射吗
             status: UserStatus::from(status) as i32,
         };
 

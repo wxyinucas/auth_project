@@ -3,15 +3,7 @@ use proto_builder_trait::tonic::BuilderAttributes;
 fn main() {
     tonic_build::configure()
         .out_dir("src/pb")
-        .with_sqlx_type(&["user.UserAuthLevel", "user.UserStatus"], None) // TODO 测试pg 转 rust
-        // .with_sqlx_type(
-        //     &["user.UserAuthLevel"],
-        //     Some(&[r#"#[sqlx(type_name = "user_auth_level")]"#]),
-        // )
-        // .with_sqlx_type(
-        //     &["user.UserStatus"],
-        //     Some(&[r#"#[sqlx(type_name = "user_status")]"#]),
-        // )
+        .with_sqlx_type(&["user.UserAuthLevel", "user.UserStatus"], None)
         // .with_sqlx_from_row(
         //     &["user.User"],
         //     Some(&[r#"#[derive(serde::Serialize)]"#]), // TODO 阅读crate源码，注意实现方式，非常棒的设计；看看怎么写的，是一个范本。
