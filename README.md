@@ -57,7 +57,7 @@ message User{
 
 enum AccountStatus{
 	ACTIVE = 0;
-	FREEZED = 1;
+	FROZEN = 1;
 }
 
 message CreateUserRequest{
@@ -66,37 +66,38 @@ message CreateUserRequest{
 }
 
 message CreateUserResponse{
-    int32 id = 1;
+	int32 id = 1;
 }
 
 message QueryUserRequest{
-    oneof identity{
-      int32 id = 1;
-      string email = 2;
-    }
-    AccountStatus status = 3;
+	oneof identity{
+		int32 id = 1;
+		string email = 2;
+	}
+	AccountStatus status = 3;
 }
 
 message QueryUserResponse{
-    repeated User = 1;
+	repeated User users = 1;
 }
 
 message DeleteUserRequest{
-  oneof identity{
-      int32 id = 1;
-      string email = 2;
-    }
+	oneof identity{
+		int32 id = 1;
+		string email = 2;
+	}
 }
 
 message DeleteUserResponse{
-  int32 id = 1;
+	int32 id = 1;
 }
 
 service UserService{
-rpc create(CreateUserRequest) returns (CreateUserResponse);
-rpc query(QueryUserRequest) returns (QueryUserResponse);
-rpc delete(DeleteUserRequest) returns (DeleteUserResponse)
+	rpc create(CreateUserRequest) returns (CreateUserResponse);
+	rpc query(QueryUserRequest) returns (QueryUserResponse);
+	rpc delete(DeleteUserRequest) returns (DeleteUserResponse);
 }
+
 ```
 
 - 数据库建表

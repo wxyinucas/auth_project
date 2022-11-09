@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package user;
+
+message User{
+	int32 id = 1;
+	string email = 2;
+	string password = 3;
+	AccountStatus status = 4;
+}
+
+enum AccountStatus{
+	ACTIVE = 0;
+	FROZEN = 1;
+}
+
+message CreateUserRequest{
+	string email = 1;
+	string password = 2;
+}
+
+message CreateUserResponse{
+	int32 id = 1;
+}
+
+message QueryUserRequest{
+	oneof identity{
+		int32 id = 1;
+		string email = 2;
+	}
+	AccountStatus status = 3;
+}
+
+message QueryUserResponse{
+	repeated User users = 1;
+}
+
+message DeleteUserRequest{
+	oneof identity{
+		int32 id = 1;
+		string email = 2;
+	}
+}
+
+message DeleteUserResponse{
+	int32 id = 1;
+}
+
+service UserService{
+	rpc create(CreateUserRequest) returns (CreateUserResponse);
+	rpc query(QueryUserRequest) returns (QueryUserResponse);
+	rpc delete(DeleteUserRequest) returns (DeleteUserResponse);
+}

@@ -1,0 +1,16 @@
+[package]
+name = "util-pb"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+prost = "0.11"
+tonic = "0.8"
+serde = {version = "1", features =["derive"]}
+sqlx = {version= "0.6", features =["runtime-tokio-rustls", "postgres"]}
+
+[build-dependencies]
+tonic-build = "0.8"
+proto-builder-trait = "0.5"
