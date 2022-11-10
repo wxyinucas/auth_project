@@ -5,7 +5,7 @@
 ## 练习内容
 
 - `tera` 和 [模板例子](https://getbootstrap.com/docs/5.2/examples/blog) 来搭建网页。
-- `Jwt`实现鉴权；`bcrypt`对明文密码加密。
+- `Jwt`实现鉴权；`bcrypt`对明文密码加密(需要么？)。
 - 设计使用`Option`、`Result`的，逻辑清晰的增删查改规则。
 - 使用`gRPC`方式实现两个功能：
     - proto 的传递
@@ -34,6 +34,20 @@
 - 设计 test 并 实现
 - 实现核心功能
 - 实现全局 cli 控制器
+
+## 开发流程v2
+
+- 需求分析
+- 设计:
+  - crate
+  - gRPC 的 proto 接口 和 数据库
+  - 设计trait，结合逻辑，定下接口和相应 error
+  - 全局配置
+- 按 crate 实现：
+  - 写出 函数 和 预期行为 和 error
+  - 设计 test 并 实现
+  - 实现 具体功能
+  - 增加 log
 
 ### 需求分析
 
@@ -126,3 +140,23 @@ svc_user = '127.0.0.1:3001'
 ## 开发笔记
 
 ### 开发 util-pb
+
+感觉`tonic_build`或`prost-build`值得一看，
+```rust
+println!("cargo:rerun-if-changed=proto/user.proto");
+```
+也可以再研究研究。
+
+### 开发 util-auth
+
+- 首先，加密需要么？这个问题需要以后回答。
+
+- 其次，[阅读材料](https://github.com/tyrchen/rust-training/blob/master/live_coding/axum-live/examples/basic.rs)
+中看一下，token 和 claims 的正确用法。
+怎么通过`FromRequest` trait 把`Claims<>`用的像原生 `Form<> Query<> Extension<>`一样，
+并在其上增加验证功能。
+
+- cargo test 能不能别doc test，看着头晕。
+solution : ` cargo test --all-targets`
+
+### 开发 page-management
