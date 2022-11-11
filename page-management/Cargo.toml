@@ -1,0 +1,23 @@
+[package]
+name = "page-management"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+axum = { version = "0.5", features = ["headers"] }
+tonic = "0.8"
+tracing = "0.1.37"
+tokio = {version = "1", features = ["full"]}
+serde ={version = "1", features = ["derive"]}
+dotenv = "0.15"
+
+
+#sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres"]}
+tera = "1"
+thiserror = "1"
+log = "0.4"
+
+util-pb = { path = "../util-pb" }
+util-auth = { path = "../util-auth" }
