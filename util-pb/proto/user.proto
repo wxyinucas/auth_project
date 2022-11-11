@@ -32,7 +32,7 @@ message QueryUserRequest{
 }
 
 message QueryUserResponse{
-	repeated User users = 1;
+	optional User users = 1;
 }
 
 message DeleteUserRequest{

@@ -7,6 +7,7 @@
       <sourceFolder url="file://$MODULE_DIR$/fuck/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/page-auth/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/util-pb/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/page-management/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

@@ -4,7 +4,7 @@ fn main() {
     tonic_build::configure()
         .out_dir("src/pb")
         .with_sqlx_type(&["user.AccountStatus"], None)
-        .with_type_attributes(&["user.User"], &[r#"#[derive(serde::Serizalize)]"#])
+        .with_type_attributes(&["user.User"], &[r#"#[derive(serde::Serialize)]"#])
         .compile(&["./proto/user.proto"], &["."])
         .unwrap();
 

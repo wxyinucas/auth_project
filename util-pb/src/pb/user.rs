@@ -1,4 +1,4 @@
-#[derive(serde::Serizalize)]
+#[derive(serde::Serialize)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct User {
     #[prost(int32, tag = "1")]
@@ -41,8 +41,8 @@ pub mod query_user_request {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUserResponse {
-    #[prost(message, repeated, tag = "1")]
-    pub users: ::prost::alloc::vec::Vec<User>,
+    #[prost(message, optional, tag = "1")]
+    pub users: ::core::option::Option<User>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteUserRequest {
