@@ -203,3 +203,11 @@ println!("cargo:rerun-if-changed=proto/user.proto");
   ```rust
    let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
   ```
+
+  - 使用Cookie遇到大问题: 看看最后怎么解决了`Extend<HeadValue>`，有什么启示。
+  - Deref AsRef! 重构state
+  - 图片 location 与 template。
+
+## 消化时间！
+
+整理代码，处理cargo clippy 错误，看下之前的问题，解决一下。
