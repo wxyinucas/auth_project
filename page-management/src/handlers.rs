@@ -21,7 +21,7 @@ pub fn redirect_with_cookies(url: &str, cookies: Option<Cookie>) -> Result<Redir
         let mut vec: Vec<HeaderValue> = Vec::new();
         cookies.encode(&mut vec);
         for v in vec.iter() {
-            headers.insert(axum::http::header::COOKIE, v.to_owned());
+            headers.insert(axum::http::header::SET_COOKIE, v.to_owned());
         }
     }
 
@@ -45,11 +45,11 @@ pub async fn login(
     dotenv::dotenv().ok();
     use std::env::var;
 
-    println!("activate!");
     // TODO 增加查询功能
     if form.email != "rex@mail.com" || form.password != "rex" {
         return Err(PMError::AuthError);
     }
+    tracing::info!("New user {} logged in ", form.email);
 
     let claims = state.jwt.new_claims(&form.email);
     let token = state.jwt.token(&claims)?;
@@ -73,7 +73,7 @@ pub async fn page_dashboard(
     Ok(Html(page))
 }
 
-pub async fn logout() -> Result<Redirect> {
-    todo!()
+pub async fn logout(CommonClaims(claims): CommonClaims<Claims>) -> Result<Redirect> {
+    tracing::info!("{} log out", claims.email);
+    redirect_with_cookies("/login", None)
 }
-// Extension(state): Extension<State>,

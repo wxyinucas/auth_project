@@ -15,6 +15,11 @@ async fn main() {
     use std::env::var as config;
     dotenv::dotenv().ok();
 
+    if std::env::var_os("RUST_LOG").is_none() {
+        std::env::set_var("RUST_LOG", "server=debug, page-management=debug");
+    }
+    tracing_subscriber::fmt().pretty().init();
+
     let jwt = Jwt::new("Rex Co.".to_string(), 3000, "42".to_string());
     let tera = Tera::new("page-management/templates/**/*.html").unwrap();
     let state = State::new(InnerState { jwt, tera });
@@ -24,6 +29,7 @@ async fn main() {
             &config("URL_DASHBOARD").unwrap(),
             get(handlers::page_dashboard),
         )
+        .route("/logout", get(handlers::logout))
         .layer(from_extractor::<CommonClaims<Claims>>())
         .route(
             &config("URL_LOGIN").unwrap(),

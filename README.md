@@ -208,6 +208,8 @@ println!("cargo:rerun-if-changed=proto/user.proto");
   - Deref AsRef! 重构state
   - 图片 location 与 template。
   - cookie 的读与写
+  - - cookie 的读写很不优雅; 注意header map
+    - html 改 标签里的 id 以 配饰 tera
 
 ## 消化时间！
 
@@ -216,6 +218,4 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - `Asref` 一个直接的变换；`Deref` 对类似智能指针，用*触发。
 - `Extend<HeadValue>`，找到实现 trait extend 的数据结构vec 即可。
 
-### 开发 page-management
-- cookie 的读写很不优雅
-- html 改 标签里的 id
+- 各种 test 的增加
