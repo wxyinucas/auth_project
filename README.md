@@ -218,4 +218,5 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - `Asref` 一个直接的变换；`Deref` 对类似智能指针，用*触发。
 - `Extend<HeadValue>`，找到实现 trait extend 的数据结构vec 即可。
 
+- 通过 tyr chen 的例子学auth 结构
 - 各种 test 的增加
