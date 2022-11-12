@@ -1,12 +1,9 @@
 use axum::extract::{FromRequest, RequestParts};
-use axum::headers::authorization::Bearer;
-use axum::headers::{Authorization, Cookie, HeaderMapExt};
-use axum::TypedHeader;
-use serde::de::DeserializeOwned;
+use axum::headers::{Cookie, HeaderMapExt};
 
 use util_auth::Claims;
 
-use crate::extensions::InnerState;
+use crate::extensions::{ State};
 use crate::PMError;
 
 pub struct CommonClaims<T>(pub T);
@@ -25,7 +22,7 @@ where
         dotenv::dotenv().ok();
 
         let cookies = req.headers().typed_get::<Cookie>();
-        let state = req.extensions().get::<InnerState>().unwrap();
+        let state = req.extensions().get::<State>().unwrap();
         let cookie_name = std::env::var("TOKEN_COOKIE").expect("AUTH token name is required.");
 
         if let Some(cookies) = cookies {

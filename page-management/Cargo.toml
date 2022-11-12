@@ -14,7 +14,7 @@ serde ={version = "1", features = ["derive"]}
 dotenv = "0.15"
 
 
-#sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres"]}
+sqlx = { version = "0.6", features = ["runtime-tokio-rustls", "postgres"]}
 tera = "1"
 thiserror = "1"
 log = "0.4"

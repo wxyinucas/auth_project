@@ -189,25 +189,33 @@ println!("cargo:rerun-if-changed=proto/user.proto");
       ```rust
       let cookies = req.headers().typed_get::<Cookie>();
       let state = req.extensions().get::<InnerState>().unwrap();
+      ```
 
     - 额外注意，这个middleware 和 Extension 在 router 中的关系。
     - 用`dotenv` 取变量:
-    ```rust
-     use dotenv;
-     dotenv::dotenv().ok();
-
-     let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
-  ```
+      ```rust
+      use dotenv;
+      dotenv::dotenv().ok();
+      let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
+      ```
 
   - 注意处理error的层级与时机
-  ```rust
-   let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
-  ```
+    ```rust
+    let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
+    ```
 
   - 使用Cookie遇到大问题: 看看最后怎么解决了`Extend<HeadValue>`，有什么启示。
   - Deref AsRef! 重构state
   - 图片 location 与 template。
+  - cookie 的读与写
 
 ## 消化时间！
 
 整理代码，处理cargo clippy 错误，看下之前的问题，解决一下。
+
+- `Asref` 一个直接的变换；`Deref` 对类似智能指针，用*触发。
+- `Extend<HeadValue>`，找到实现 trait extend 的数据结构vec 即可。
+
+### 开发 page-management
+- cookie 的读写很不优雅
+- html 改 标签里的 id

@@ -5,5 +5,5 @@ pub mod error;
 pub mod extensions;
 pub(crate) mod forms;
 pub mod handlers;
-pub(crate) mod middleware;
+pub mod middleware;
 pub mod views;

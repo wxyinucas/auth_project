@@ -28,11 +28,11 @@ impl Jwt {
         (Utc::now() + Duration::seconds(self.exp)).timestamp_millis() as usize
     }
 
-    pub fn new_claims(&self, email: String) -> Claims {
+    pub fn new_claims(&self, email: &str) -> Claims {
         Claims {
             iss: self.iss.clone(),
             exp: self.cal_claims_exp(),
-            email,
+            email: email.to_owned(),
         }
     }
 
@@ -60,7 +60,7 @@ mod tests {
     #[test]
     fn jwt_should_work() {
         let jwt = Jwt::new("Rex Wang".to_string(), 300, "Rex Secret".to_string());
-        let origin_claims = jwt.new_claims("rex@gmail.com".to_string());
+        let origin_claims = jwt.new_claims("rex@gmail.com");
 
         let token = jwt.token(&origin_claims).unwrap();
         let claims = jwt.valid_then_get_claim(&token).unwrap();
