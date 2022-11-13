@@ -220,3 +220,12 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 
 - 通过 tyr chen 的例子学auth 结构
 - 各种 test 的增加
+
+### 开发 util-auth v2
+
+- 思考，范型夹在哪里，用幽灵结构放在 struct 还是放在函数？
+  - 放在具体函数里，这样Jwt可以在同一个服务中处理不同类型的Claims（虽然可能不会有这种需求）
+- 给 claims 定义一个 trait
+- ! 我对 trait Claims 的 builder 设计甚至还有点巧妙，点个赞！
+  - 使用 trait DeserializeOwned 代替 Deserialize<'a>
+- 将来可以进行一个`Rust 内存效率`的新专题。

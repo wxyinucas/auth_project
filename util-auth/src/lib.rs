@@ -1,69 +1,79 @@
-use chrono::{Duration, Utc};
 use jsonwebtoken as jwt;
+use jsonwebtoken::{DecodingKey, EncodingKey};
 
-pub use error::{AuthError, Result};
+use claims::Claims;
+pub use error::AuthError;
+use error::Result;
 
+pub mod claims;
 mod error;
 
 pub struct Jwt {
     pub iss: String,
-    pub exp: i64,
-    pub secret: String,
-}
-
-// TODO 这个数据结构将来可能有变化，围绕他的接口如何制定？
-#[derive(serde::Deserialize, serde::Serialize, Debug, Eq, PartialEq)]
-pub struct Claims {
-    pub iss: String,
     pub exp: usize,
-    pub email: String,
+    pub encoding_key: EncodingKey,
+    pub decoding_key: DecodingKey,
 }
 
 impl Jwt {
-    pub fn new(iss: String, exp: i64, secret: String) -> Self {
-        Self { iss, exp, secret }
-    }
-
-    fn cal_claims_exp(&self) -> usize {
-        (Utc::now() + Duration::seconds(self.exp)).timestamp_millis() as usize
-    }
-
-    pub fn new_claims(&self, email: &str) -> Claims {
-        Claims {
-            iss: self.iss.clone(),
-            exp: self.cal_claims_exp(),
-            email: email.to_owned(),
+    pub fn new(iss: String, exp: usize, secret: &str) -> Self {
+        Self {
+            iss,
+            exp,
+            encoding_key: EncodingKey::from_secret(secret.as_bytes()),
+            decoding_key: DecodingKey::from_secret(secret.as_bytes()),
         }
     }
 
-    pub fn token(&self, claims: &Claims) -> Result<String> {
-        let header = jwt::Header::new(jwt::Algorithm::HS256);
-        let key = jwt::EncodingKey::from_secret(self.secret.as_bytes());
+    fn get_epoch(exp: usize) -> usize {
+        use std::time::SystemTime;
+        let res = SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .unwrap()
+            .as_secs() as usize;
+        res + exp
+    }
 
-        let token = jwt::encode(&header, &claims, &key).map_err(AuthError::from)?;
+    pub fn new_claims<T: Claims>(&self, claims: T) -> Result<T> {
+        let claims = claims.iss(&self.iss);
+        let claims = claims.exp(Self::get_epoch(self.exp));
+        Ok(claims)
+    }
+
+    pub fn token<T: Claims>(&self, claims: T) -> Result<String> {
+        let header = jwt::Header::new(jwt::Algorithm::HS256);
+        let token = jwt::encode(&header, &claims, &self.encoding_key)?;
 
         Ok(token)
     }
 
-    pub fn valid_then_get_claim(&self, token: &str) -> Result<Claims> {
-        let key = jwt::DecodingKey::from_secret(self.secret.as_bytes());
+    pub fn validate_and_get_claims<T: Claims>(&self, token: &str) -> Result<T> {
         let validation = jwt::Validation::new(jwt::Algorithm::HS256);
-        let claims = jwt::decode::<Claims>(token, &key, &validation).map_err(AuthError::from)?;
+        let claims = jwt::decode::<T>(token, &self.decoding_key, &validation)?;
+
         Ok(claims.claims)
     }
 }
 
 #[cfg(test)]
 mod tests {
+    use crate::claims::TestClaims;
+
     use super::*;
 
     #[test]
     fn jwt_should_work() {
-        let jwt = Jwt::new("Rex Wang".to_string(), 300, "Rex Secret".to_string());
-        let origin_claims = jwt.new_claims("rex@gmail.com");
+        let jwt = Jwt::new("rex wang".to_string(), 60, "secret");
+        let test_claims = TestClaims {
+            name: "test_claims".to_string(),
+            ..TestClaims::default()
+        };
 
-        let token = jwt.token(&origin_claims).unwrap();
-        let claims = jwt.valid_then_get_claim(&token).unwrap();
-        assert_eq!(claims, origin_claims);
+        let origin_claims = jwt.new_claims(test_claims).unwrap();
+        let token = jwt.token(origin_claims.clone()).unwrap();
+        let claims = jwt
+            .validate_and_get_claims::<TestClaims>(token.as_str())
+            .unwrap();
+        assert_eq!(origin_claims, claims);
     }
 }
