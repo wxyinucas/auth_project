@@ -1,7 +1,7 @@
-use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 
-pub trait Claims: Serialize +  DeserializeOwned +Default {
+pub trait Claims: Serialize + DeserializeOwned + Default {
     fn iss(self, iss: &str) -> Self;
     fn exp(self, exp: usize) -> Self;
 }

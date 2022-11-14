@@ -9,6 +9,11 @@
       <sourceFolder url="file://$MODULE_DIR$/util-pb/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/page-management/src" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
+      <excludeFolder url="file://$MODULE_DIR$/.idea/dataSources" />
+      <excludeFolder url="file://$MODULE_DIR$/page-management/src/bin" />
+      <excludeFolder url="file://$MODULE_DIR$/page-management/template/assets" />
+      <excludeFolder url="file://$MODULE_DIR$/page-management/template/dashboard" />
+      <excludeFolder url="file://$MODULE_DIR$/page-management/template/sign-in" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

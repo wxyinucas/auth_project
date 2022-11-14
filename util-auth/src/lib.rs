@@ -2,23 +2,23 @@ use jsonwebtoken as jwt;
 use jsonwebtoken::{DecodingKey, EncodingKey};
 
 use claims::Claims;
-pub use error::AuthError;
+pub use error::JwtError;
 use error::Result;
 
 pub mod claims;
 mod error;
 
 pub struct Jwt {
-    pub iss: String,
-    pub exp: usize,
-    pub encoding_key: EncodingKey,
-    pub decoding_key: DecodingKey,
+    iss: String,
+    exp: usize,
+    encoding_key: EncodingKey,
+    decoding_key: DecodingKey,
 }
 
 impl Jwt {
-    pub fn new(iss: String, exp: usize, secret: &str) -> Self {
+    pub fn new(iss: impl Into<String>, exp: usize, secret: &str) -> Self {
         Self {
-            iss,
+            iss: iss.into(),
             exp,
             encoding_key: EncodingKey::from_secret(secret.as_bytes()),
             decoding_key: DecodingKey::from_secret(secret.as_bytes()),

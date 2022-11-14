@@ -229,3 +229,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - ! 我对 trait Claims 的 builder 设计甚至还有点巧妙，点个赞！
   - 使用 trait DeserializeOwned 代替 Deserialize<'a>
 - 将来可以进行一个`Rust 内存效率`的新专题。
+- `get_epoch()` 包进trait claims中?
+- （时刻）现在写完了 FromRequest，test呢？
+  - 直接写一个脚手架代码，手动测试--是自动化的好入手点
+- `git rm --cache` 只删git记录，不删文件。
