@@ -3,7 +3,6 @@ use std::sync::Arc;
 
 use axum::extract::{FromRequest, RequestParts};
 use axum::headers::{Cookie, HeaderMapExt};
-use axum::TypedHeader;
 use serde::{Deserialize, Serialize};
 use tera::Tera;
 
