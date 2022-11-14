@@ -25,7 +25,7 @@ async fn main() {
 }
 
 async fn welcome_handler(CommonClaims(claims): CommonClaims<UserClaims>) -> Html<String> {
-    Html(String::from(format!("Welcome {claims:?}")))
+    Html(format!("Welcome {claims:?}"))
 }
 
 #[axum_macros::debug_handler]
