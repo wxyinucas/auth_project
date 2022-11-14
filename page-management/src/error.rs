@@ -1,6 +1,8 @@
 use axum::response::{IntoResponse, Response};
 use thiserror::Error;
 
+pub type Result<T> = std::result::Result<T, PMError>;
+
 #[derive(Error, Debug)]
 pub enum PMError {
     #[error("Jwt Error: {0}")]
@@ -8,6 +10,9 @@ pub enum PMError {
 
     #[error("Auth Error")]
     AuthError,
+
+    #[error("Tera Error: {0}")]
+    TeraError(#[from] tera::Error),
 }
 
 impl IntoResponse for PMError {

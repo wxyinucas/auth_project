@@ -233,3 +233,6 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - （时刻）现在写完了 FromRequest，test呢？
   - 直接写一个脚手架代码，手动测试--是自动化的好入手点
 - `git rm --cache` 只删git记录，不删文件。
+
+- 静态文件处理：
+  - 将配套css js 都放到assets下，修改html中对应路径

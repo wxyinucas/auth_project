@@ -12,10 +12,11 @@ use util_auth::Jwt;
 use crate::error::PMError;
 
 pub mod error;
+pub mod handlers;
 
-const LOGIN: &'static str = "/login";
-const DASHBOARD: &'static str = "/dashboard";
-const TOKEN_COOKIE: &'static str = "rex_token";
+pub const LOGIN: &str = "/login";
+pub const DASHBOARD: &str = "/dashboard";
+pub const TOKEN_COOKIE: &str = "rex_token";
 
 /* =================================================================
 
