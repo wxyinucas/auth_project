@@ -7,7 +7,7 @@ pub mod error;
 pub(crate) type UserId = i32;
 
 #[tonic::async_trait]
-trait UserDB {
+pub trait UserDB {
     async fn query(&self, identity: query_user_request::Identity) -> Result<Option<User>>;
 
     async fn insert(&self, user: &User) -> Result<UserId>;

@@ -1,4 +1,4 @@
-#[derive(sqlx::FromRow, serde::Serialize, Clone, PartialEq, ::prost::Message)]
+#[derive(serde::Serialize, Clone, PartialEq, ::prost::Message)]
 pub struct User {
     #[prost(int32, tag = "1")]
     pub id: i32,

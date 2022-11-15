@@ -1,3 +1,4 @@
+#![allow(clippy::all, unused_imports, dead_code)]
 use axum::http::StatusCode;
 use axum::response::Html;
 use axum::routing::{get, get_service, post};
@@ -39,5 +40,5 @@ async fn main() {
 }
 
 async fn welcome_handler(CommonClaims(claims): CommonClaims<UserClaims>) -> Html<String> {
-    Html(String::from(format!("Welcome {claims:?}")))
+    Html(format!("Welcome {claims:?}"))
 }

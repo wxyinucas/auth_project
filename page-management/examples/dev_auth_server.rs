@@ -1,3 +1,4 @@
+#![allow(clippy::all, unused_imports, dead_code)]
 use axum::response::Html;
 use axum::routing::{get, post};
 use axum::{Extension, Form, Router};

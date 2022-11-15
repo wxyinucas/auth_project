@@ -245,7 +245,11 @@ println!("cargo:rerun-if-changed=proto/user.proto");
     - 好像是，有一层抽象是用于和db交互的，US这一层是用于 gRPC 的。
     - 注意：用于sqlx的trait接口和 用于gRPC的接口是不同的；这是因为，在gRPC调用sqlx时，可以做一些预先处理。所以，sqlx的接口和结果都更加明确。
 - database migration:
-  - cargo install sqlx-cli
-  - sqlx migrate add init -r
-  - sqlx migrate run
+  - `cargo install sqlx-cli`
+  - `sqlx migrate add init -r`
+  - `sqlx migrate run`
 - Deref AsRef: 证明了deref就已经足够了。
+- 注意，sqlx::type 与 postgres::type 的关系，`svc-users/src/db_pool.rs:106:14`.
+  - 一个是`impl FromRow for User`, 一个是针对 type 的专用转换。
+  - 结论是，enum必须写一个结构来转换，然后 FromRow
+- `cargo test -- --nocapture`  `cargo test -- -all-targets`
