@@ -1,0 +1,20 @@
+[package]
+name = "svc-users"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+tonic = "0.8"
+tokio = "1.21.2"
+
+tracing = "0.1"
+tracing-subscriber = "0.3"
+
+serde = { version = "1", features = ["derive"] }
+sqlx = { version = "0.6.2", features = ["postgres", "runtime-tokio-rustls"] }
+
+thiserror = "1"
+
+util-pb = {path = "../util-pb"}

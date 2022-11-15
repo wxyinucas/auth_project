@@ -58,7 +58,7 @@
 - crate：
     - 网页: page-management
     - 功能: util-pb util-auth
-    - 服务: svc-auth
+    - 服务: svc-users
 - Proto:
 
 ```proto
@@ -186,30 +186,31 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 
 - 笔记：
     - 注意axum.rs 在auth middleware 中的技巧，extension，可以拿到额外信息。
-      ```rust
+      ```rust-
       let cookies = req.headers().typed_get::<Cookie>();
       let state = req.extensions().get::<InnerState>().unwrap();
       ```
 
     - 额外注意，这个middleware 和 Extension 在 router 中的关系。
     - 用`dotenv` 取变量:
-      ```rust
+      ```rust-
       use dotenv;
       dotenv::dotenv().ok();
       let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
       ```
 
-  - 注意处理error的层级与时机
-    ```rust
-    let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
-    ```
+    - 注意处理error的层级与时机
+      ```rust-
+      let cookie_name = std::env::var("rex_auth_token").expect("AUTH token name is required.");
+      ```
 
-  - 使用Cookie遇到大问题: 看看最后怎么解决了`Extend<HeadValue>`，有什么启示。
-  - Deref AsRef! 重构state
-  - 图片 location 与 template。
-  - cookie 的读与写
-  - - cookie 的读写很不优雅; 注意header map
-    - html 改 标签里的 id 以 配饰 tera
+    - 使用Cookie遇到大问题: 看看最后怎么解决了`Extend<HeadValue>`，有什么启示。
+    - Deref AsRef! 重构state
+    - 图片 location 与 template。
+    - cookie 的读与写
+    -
+        - cookie 的读写很不优雅; 注意header map
+        - html 改 标签里的 id 以 配饰 tera
 
 ## 消化时间！
 
@@ -224,15 +225,27 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 ### 开发 util-auth v2
 
 - 思考，范型夹在哪里，用幽灵结构放在 struct 还是放在函数？
-  - 放在具体函数里，这样Jwt可以在同一个服务中处理不同类型的Claims（虽然可能不会有这种需求）
+    - 放在具体函数里，这样Jwt可以在同一个服务中处理不同类型的Claims（虽然可能不会有这种需求）
 - 给 claims 定义一个 trait
 - ! 我对 trait Claims 的 builder 设计甚至还有点巧妙，点个赞！
-  - 使用 trait DeserializeOwned 代替 Deserialize<'a>
+    - 使用 trait DeserializeOwned 代替 Deserialize<'a>
 - 将来可以进行一个`Rust 内存效率`的新专题。
 - `get_epoch()` 包进trait claims中?
 - （时刻）现在写完了 FromRequest，test呢？
-  - 直接写一个脚手架代码，手动测试--是自动化的好入手点
+    - 直接写一个脚手架代码，手动测试--是自动化的好入手点
 - `git rm --cache` 只删git记录，不删文件。
 
 - 静态文件处理：
-  - 将配套css js 都放到assets下，修改html中对应路径
+    - 将配套css js 都放到assets下，修改html中对应路径
+- 重新考虑 CommonClaims 和 Jwt 泛型的关系
+
+### 开发 svc-users
+
+- 现在的问题，如何实现trait UserService，为什么 tyr 又做了一层抽象？
+    - 好像是，有一层抽象是用于和db交互的，US这一层是用于 gRPC 的。
+    - 注意：用于sqlx的trait接口和 用于gRPC的接口是不同的；这是因为，在gRPC调用sqlx时，可以做一些预先处理。所以，sqlx的接口和结果都更加明确。
+- database migration:
+  - cargo install sqlx-cli
+  - sqlx migrate add init -r
+  - sqlx migrate run
+- Deref AsRef: 证明了deref就已经足够了。

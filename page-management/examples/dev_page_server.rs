@@ -7,7 +7,7 @@ use tera::Tera;
 use tower_http::services::ServeDir;
 
 use page_management::handlers::{handler_login, page_dashboard, page_login};
-use page_management::{CommonClaims, State, UserClaims, LOGIN, DASHBOARD};
+use page_management::{CommonClaims, State, UserClaims, DASHBOARD, LOGIN};
 use util_auth::Jwt;
 
 #[tokio::main]
