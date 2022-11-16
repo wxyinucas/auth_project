@@ -60,8 +60,8 @@ pub mod delete_user_request {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteUserResponse {
-    #[prost(int32, tag = "1")]
-    pub id: i32,
+    #[prost(message, optional, tag = "1")]
+    pub user: ::core::option::Option<User>,
 }
 #[derive(
     sqlx::Type, Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration,

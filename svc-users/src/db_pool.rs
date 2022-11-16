@@ -2,7 +2,7 @@ use std::ops::Deref;
 
 use sqlx::{PgPool, Row};
 
-use util_pb::user::{query_user_request, User};
+use util_pb::user::{query_user_request, CreateUserRequest, User};
 
 use crate::{
     error::{Result, UsersError},
@@ -48,7 +48,7 @@ impl UserDB for UserDBPool {
         Ok(row)
     }
 
-    async fn insert(&self, user: &User) -> Result<UserId> {
+    async fn insert(&self, user: &CreateUserRequest) -> Result<UserId> {
         let sql = "INSERT INTO auth.users (email, password) VALUES ($1, $2) RETURNING id";
         let res = sqlx::query(sql)
             .bind(&user.email)
@@ -75,7 +75,7 @@ impl UserDB for UserDBPool {
 mod tests {
     use sqlx_db_tester::TestDb;
 
-    use util_pb::user::{query_user_request, User};
+    use util_pb::user::{query_user_request, CreateUserRequest};
 
     use crate::db_pool::UserDBPool;
     use crate::UserDB;
@@ -88,11 +88,9 @@ mod tests {
         let user_db_pool = UserDBPool::new(pool);
 
         // insert
-        let user = User {
-            id: 0,
+        let user = CreateUserRequest {
             email: "rex@mail.com".to_string(),
             password: "rex_pwd".to_string(),
-            status: 0,
         };
 
         let id = user_db_pool.insert(&user).await.unwrap();

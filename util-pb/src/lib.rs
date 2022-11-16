@@ -3,9 +3,18 @@ use sqlx::{Error, FromRow, Row};
 
 pub use pb::user;
 
+use crate::user::delete_user_request::Identity;
 use crate::user::{AccountStatus, User};
 
 mod pb;
+
+/* =================================================================
+
+
+    FromRow for User
+
+
+================================================================== */
 
 impl FromRow<'_, PgRow> for User {
     fn from_row(row: &PgRow) -> Result<Self, Error> {
@@ -35,6 +44,22 @@ impl From<AS> for AccountStatus {
         match value {
             AS::Active => AccountStatus::Active,
             AS::Frozen => AccountStatus::Frozen,
+        }
+    }
+}
+
+/* =================================================================
+
+
+    From Identity to Identity
+
+
+================================================================== */
+impl From<Identity> for user::query_user_request::Identity {
+    fn from(value: Identity) -> Self {
+        match value {
+            Identity::Id(id) => user::query_user_request::Identity::Id(id),
+            Identity::Email(email) => user::query_user_request::Identity::Email(email),
         }
     }
 }

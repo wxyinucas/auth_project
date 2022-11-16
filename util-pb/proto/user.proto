@@ -43,7 +43,7 @@ message DeleteUserRequest{
 }
 
 message DeleteUserResponse{
-	int32 id = 1;
+	User user = 1;
 }
 
 service UserService{

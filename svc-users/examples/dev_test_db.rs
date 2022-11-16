@@ -5,7 +5,7 @@ use sqlx_db_tester::TestDb;
 use svc_users::db_pool::UserDBPool;
 use svc_users::error::Result;
 use svc_users::UserDB;
-use util_pb::user::{query_user_request, User};
+use util_pb::user::{query_user_request, CreateUserRequest};
 
 #[tokio::main]
 async fn main() {
@@ -15,11 +15,9 @@ async fn main() {
     let user_db_pool = UserDBPool::new(pool);
 
     // insert
-    let user = User {
-        id: 0,
+    let user = CreateUserRequest {
         email: "rex@mail.com".to_string(),
         password: "rex_pwd".to_string(),
-        status: 0,
     };
 
     let id = user_db_pool.insert(&user).await.unwrap();

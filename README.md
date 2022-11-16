@@ -252,4 +252,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - 注意，sqlx::type 与 postgres::type 的关系，`svc-users/src/db_pool.rs:106:14`.
   - 一个是`impl FromRow for User`, 一个是针对 type 的专用转换。
   - 结论是，enum必须写一个结构来转换，然后 FromRow
-- `cargo test -- --nocapture`  `cargo test -- -all-targets`
+- database test:
+  - `cargo test -- --nocapture`  `cargo test -- -all-targets`
+  - 再参考 tyr reservation/service/src/test_utils, `struct TestConfig`. 非常好的资料！
+- 肯定要重新学习 `stream`
