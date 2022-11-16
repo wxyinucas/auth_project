@@ -253,6 +253,9 @@ println!("cargo:rerun-if-changed=proto/user.proto");
   - 一个是`impl FromRow for User`, 一个是针对 type 的专用转换。
   - 结论是，enum必须写一个结构来转换，然后 FromRow
 - database test:
-  - `cargo test -- --nocapture`  `cargo test -- -all-targets`
+  - `cargo test -- --nocapture`  `cargo test --all-targets`
+    - `cargo test --lib` is enough.
   - 再参考 tyr reservation/service/src/test_utils, `struct TestConfig`. 非常好的资料！
+  - 生成user 和 password
+  - test db 如何从环境中读取信息
 - 肯定要重新学习 `stream`

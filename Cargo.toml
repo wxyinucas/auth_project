@@ -1,2 +1,2 @@
 [workspace]
-members = ["util-pb", "svc-users", "util-auth", "page-management"]
+members = ["page-management", "svc-users", "util-pb", "util-auth"]

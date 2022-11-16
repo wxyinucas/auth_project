@@ -81,9 +81,9 @@ mod tests {
     use crate::UserDB;
 
     #[tokio::test]
-    async fn pg_db_should_work() {
+    async fn user_db_pool_should_work() {
         println!("{:?}", std::env::current_dir());
-        let tdb = TestDb::new("localhost", 5432, "", "", "../migrations");
+        let tdb = TestDb::new("localhost", 5432, "", "", "../migrations"); // TODO test 从环境中读信息
         let pool = tdb.get_pool().await;
         let user_db_pool = UserDBPool::new(pool);
 

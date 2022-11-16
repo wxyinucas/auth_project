@@ -23,8 +23,6 @@ pub struct CreateUserResponse {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUserRequest {
-    #[prost(enumeration = "AccountStatus", tag = "3")]
-    pub status: i32,
     #[prost(oneof = "query_user_request::Identity", tags = "1, 2")]
     pub identity: ::core::option::Option<query_user_request::Identity>,
 }

@@ -28,7 +28,7 @@ message QueryUserRequest{
 		int32 id = 1;
 		string email = 2;
 	}
-	AccountStatus status = 3;
+//	AccountStatus status = 3;
 }
 
 message QueryUserResponse{
