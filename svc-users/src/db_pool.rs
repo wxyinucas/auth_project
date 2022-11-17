@@ -6,7 +6,7 @@ use util_pb::user::{query_user_request, CreateUserRequest, User};
 
 use crate::{
     error::{Result, UsersError},
-    UserDB, UserId,
+    traits::{UserDB, UserId},
 };
 
 pub struct UserDBPool {
@@ -78,7 +78,7 @@ mod tests {
     use util_pb::user::{query_user_request, CreateUserRequest};
 
     use crate::db_pool::UserDBPool;
-    use crate::UserDB;
+    use crate::traits::UserDB;
 
     #[tokio::test]
     async fn user_db_pool_should_work() {

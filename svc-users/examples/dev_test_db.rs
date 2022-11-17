@@ -4,7 +4,7 @@ use sqlx_db_tester::TestDb;
 
 use svc_users::db_pool::UserDBPool;
 use svc_users::error::Result;
-use svc_users::UserDB;
+use svc_users::traits::UserDB;
 use util_pb::user::{query_user_request, CreateUserRequest};
 
 #[tokio::main]

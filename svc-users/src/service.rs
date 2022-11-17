@@ -1,4 +1,5 @@
 use tonic::{Request, Response, Status};
+use tracing::info;
 
 use util_pb::user::user_service_server::UserService;
 use util_pb::user::{
@@ -6,7 +7,7 @@ use util_pb::user::{
     QueryUserResponse,
 };
 
-use crate::{db_pool::UserDBPool, UserDB};
+use crate::{db_pool::UserDBPool, traits::UserDB};
 
 pub struct UserInnerService {
     pub db_pool: UserDBPool,
@@ -29,6 +30,8 @@ impl UserService for UserInnerService {
             .insert(&req)
             .await
             .map_err(|err| Status::internal(err.to_string()))?;
+
+        info!("New User with id {} created", user_id);
         Ok(Response::new(CreateUserResponse { id: user_id }))
     }
 
@@ -64,6 +67,8 @@ impl UserService for UserInnerService {
             .delete(user.unwrap().id)
             .await
             .map_err(|err| Status::internal(err.to_string()))?;
+
+        info!("{:?} deleted", user);
         Ok(Response::new(DeleteUserResponse { user: Some(user) }))
     }
 }
