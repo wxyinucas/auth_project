@@ -121,5 +121,9 @@ println!("cargo:rerun-if-changed=proto/user.proto");
     - test db 如何从环境中读取信息
 - 肯定要重新学习 `stream`
 
-## 开发 svc-users 与 util-auth 的联合接口
+## 开发 svc-users 与 page-management 的联合接口
 - fn `svc_users()`，脑洞打开的函数，并不优雅，但是锻炼了使用spawn的技巧。
+  - 可以利用 spawn 进行一些逻辑上的组合，但是没啥实际用途。
+- CommonClaims 的 test 在哪里？
+- 在 page-management 的InnerState 中，将新的服务用Option 包装，以和旧功能匹配。
+- 关于page-management 中 State的可变引用，是个比较大的问题。

@@ -12,7 +12,7 @@ use util_auth::Jwt;
 async fn main() {
     let jwt = Jwt::new("rex", 20000, "secret");
     let tera = Tera::new("../../template/**/*.html").unwrap();
-    let state = State::new(jwt, tera);
+    let state = State::new(jwt, tera, None);
 
     let app = Router::new()
         .route("/", post(login_handler))

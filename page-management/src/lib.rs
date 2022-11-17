@@ -5,9 +5,11 @@ use axum::extract::{FromRequest, RequestParts};
 use axum::headers::{Cookie, HeaderMapExt};
 use serde::{Deserialize, Serialize};
 use tera::Tera;
+use tonic::transport::Channel;
 
 use util_auth::claims::Claims;
 use util_auth::Jwt;
+use util_pb::user::user_service_client::UserServiceClient;
 
 use crate::error::PMError;
 
@@ -29,6 +31,7 @@ pub const TOKEN_COOKIE: &str = "rex_token";
 pub struct InnerState {
     pub jwt: Jwt,
     pub tera: Tera,
+    pub user_client: Option<UserServiceClient<Channel>>,
 }
 
 pub struct State {
@@ -36,8 +39,12 @@ pub struct State {
 }
 
 impl State {
-    pub fn new(jwt: Jwt, tera: Tera) -> Self {
-        let inner = InnerState { jwt, tera };
+    pub fn new(jwt: Jwt, tera: Tera, user_client: Option<UserServiceClient<Channel>>) -> Self {
+        let inner = InnerState {
+            jwt,
+            tera,
+            user_client,
+        };
         Self {
             inner: Arc::new(inner),
         }

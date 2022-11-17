@@ -6,6 +6,9 @@ use axum_macros::debug_handler;
 use serde::Deserialize;
 use tera::Context;
 
+use util_pb::user::query_user_request::Identity;
+use util_pb::user::QueryUserRequest;
+
 use crate::{error::Result, PMError, State, UserClaims, DASHBOARD, TOKEN_COOKIE};
 
 type TeraHtml = Html<String>;
@@ -46,7 +49,26 @@ pub async fn handler_login(
     Form(form): Form<LoginForm>,
     Extension(state): Extension<State>,
 ) -> Result<Redirect> {
-    // TODO implement Auth check
+    let query = QueryUserRequest {
+        identity: Some(Identity::Email(form.email.clone())),
+    };
+
+    let user_client = state.user_client.clone();
+    let user = user_client
+        .ok_or(PMError::LackClientError("User"))
+        .unwrap()
+        .query(query)
+        .await
+        .map_err(|err| {
+            println!("{:?}", err);
+            PMError::InnerSvcError("User")
+        })?
+        .into_inner()
+        .users;
+    if user.is_none() || user.unwrap().password != form.password {
+        return Err(PMError::AuthError);
+    }
+
     let raw_claims = UserClaims {
         email: form.email,
         ..UserClaims::default()

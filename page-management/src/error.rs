@@ -13,6 +13,12 @@ pub enum PMError {
 
     #[error("Tera Error: {0}")]
     TeraError(#[from] tera::Error),
+
+    #[error("Lack client of: {0}")]
+    LackClientError(&'static str),
+
+    #[error("Inner Svc Error: {0}")]
+    InnerSvcError(&'static str),
 }
 
 impl IntoResponse for PMError {
