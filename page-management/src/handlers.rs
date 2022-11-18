@@ -46,6 +46,7 @@ pub async fn page_login(Extension(state): Extension<State>) -> Result<TeraHtml> 
 
 #[debug_handler]
 pub async fn handler_login(
+    // req: Request<Body>,
     Form(form): Form<LoginForm>,
     Extension(state): Extension<State>,
 ) -> Result<Redirect> {
@@ -77,6 +78,7 @@ pub async fn handler_login(
     let token = state.jwt.token(claims).map_err(PMError::from)?;
     let inner = &format!("{}={}", TOKEN_COOKIE, token)[..];
     let cookie = Some(inner);
+
     Ok(redirect_with_cookies(DASHBOARD, cookie))
 }
 

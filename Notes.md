@@ -127,3 +127,5 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - CommonClaims 的 test 在哪里？
 - 在 page-management 的InnerState 中，将新的服务用Option 包装，以和旧功能匹配。
 - 关于page-management 中 State的可变引用，是个比较大的问题。
+- html 标签里不能有标点。。。
+  - 开发的方法还是生成一个file不停尝试。
