@@ -1,6 +1,8 @@
 #![allow(clippy::all, unused_imports, dead_code)]
 
-use sqlx_db_tester::TestDb;
+use dotenv::dotenv;
+use sqlx_db_tester::TestPg;
+use std::path::Path;
 
 use svc_users::db_pool::UserDBPool;
 use svc_users::error::Result;
@@ -9,8 +11,10 @@ use util_pb::user::{query_user_request, CreateUserRequest};
 
 #[tokio::main]
 async fn main() {
+    dotenv().ok();
     println!("{:?}", std::env::current_dir());
-    let tdb = TestDb::new("localhost", 5432, "", "", "./migrations");
+    // TestPg::new("postgres://localhost:5432".to_string(), Path::new("."));  // 记录了新的格式
+    let tdb = TestPg::new(std::env::var("TDB_URL").unwrap(), Path::new("./migrations"));
     let pool = tdb.get_pool().await;
     let user_db_pool = UserDBPool::new(pool);
 

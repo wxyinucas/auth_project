@@ -22,5 +22,5 @@ util-pb = { path = "../util-pb" }
 
 
 [dev-dependencies]
-sqlx-db-tester = "0.1.1"
+sqlx-db-tester = "0.3.1"
 dotenv = "0.15"

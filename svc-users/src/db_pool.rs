@@ -73,7 +73,9 @@ impl UserDB for UserDBPool {
 
 #[cfg(test)]
 mod tests {
-    use sqlx_db_tester::TestDb;
+    use dotenv::dotenv;
+    use sqlx_db_tester::TestPg;
+    use std::path::Path;
 
     use util_pb::user::{query_user_request, CreateUserRequest};
 
@@ -82,8 +84,12 @@ mod tests {
 
     #[tokio::test]
     async fn user_db_pool_should_work() {
+        dotenv().ok();
         println!("{:?}", std::env::current_dir());
-        let tdb = TestDb::new("localhost", 5432, "", "", "../migrations"); // TODO test 从环境中读信息
+        let tdb = TestPg::new(
+            std::env::var("TDB_URL").unwrap(),
+            Path::new("../migrations"),
+        ); // TODO test 从环境中读信息
         let pool = tdb.get_pool().await;
         let user_db_pool = UserDBPool::new(pool);
 
