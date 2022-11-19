@@ -142,3 +142,5 @@ println!("cargo:rerun-if-changed=proto/user.proto");
   - 变与不变，test应该不变
 - DB:
   - insert email with '{}' to allow @.
+- Handlers:
+  - FromRequest claims 功能意外的好用。

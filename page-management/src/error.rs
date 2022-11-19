@@ -18,7 +18,10 @@ pub enum PMError {
     LackClientError(&'static str),
 
     #[error("Inner Svc Error: {0}")]
-    InnerSvcError(&'static str),
+    InnerSvcError(String),
+
+    #[error("Not implement Error: {0}")]
+    NotImplementedError(&'static str),
 }
 
 impl IntoResponse for PMError {

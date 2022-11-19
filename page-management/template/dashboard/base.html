@@ -10,7 +10,7 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/5.2/examples/dashboard/">
 
-    <link href="assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
       .bd-placeholder-img {
@@ -67,7 +67,7 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="assets/dashboard.css" rel="stylesheet">
+    <link href="../assets/dashboard.css" rel="stylesheet">
 </head>
 <body>
 
@@ -82,7 +82,7 @@
            aria-label="Search">
     <div class="navbar-nav">
         <div class="nav-item text-nowrap">
-            <a class="nav-link px-3" href="#">Sign out</a>
+            <a class="nav-link px-3" href="/login">Sign out</a>
         </div>
     </div>
 </header>
@@ -93,7 +93,7 @@
             <div class="position-sticky pt-3 sidebar-sticky">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">
+                        <a class="nav-link active" aria-current="page" href="/dashboard/user_index">
                             <span data-feather="home" class="align-text-bottom"></span>
                             Users
                         </a>
@@ -141,7 +141,7 @@
                 {% block toolbar %}{%endblock%}
             </div>
             <div>
-                {% block msg%} {%endblock%}
+<!--                {% block msg%} {%endblock%}-->
                 {%block content%}Content{%endblock%}
             </div>
         </main>
@@ -149,7 +149,7 @@
 </div>
 
 
-<script src="assets/dist/js/bootstrap.bundle.min.js"></script>
-<script src="assets/dashboard.js"></script>
+<script src="../assets/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../assets/dashboard.js"></script>
 </body>
 </html>

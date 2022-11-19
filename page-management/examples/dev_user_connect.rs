@@ -7,13 +7,18 @@ use serde::Deserialize;
 use tera::Tera;
 use tower_http::services::ServeDir;
 
-use page_management::handlers::{handler_login, page_dashboard, page_login};
-use page_management::{CommonClaims, State, UserClaims, DASHBOARD, LOGIN};
+use page_management::handlers::{handler_login, page_dashboard, page_login, page_user};
+use page_management::{CommonClaims, State, UserClaims, DASHBOARD, LOGIN, USER_INDEX};
 use util_auth::Jwt;
 use util_pb::user::user_service_client::UserServiceClient;
 
 #[tokio::main]
 async fn main() {
+    if std::env::var_os("RUST_LOG").is_none() {
+        std::env::set_var("RUST_LOG", "page-management=debug");
+    }
+    tracing_subscriber::fmt().pretty().init();
+
     let jwt = Jwt::new("rex", 20000, "secret");
     let tera = Tera::new("page-management/template/**/*.html").unwrap();
     let client = UserServiceClient::connect("http://0.0.0.0:3001")
@@ -24,6 +29,7 @@ async fn main() {
     let app = Router::new()
         .route(LOGIN, get(page_login).post(handler_login))
         .route(DASHBOARD, get(page_dashboard))
+        .route(USER_INDEX, get(page_user))
         .layer(Extension(state))
         .nest(
             "/assets",

@@ -18,6 +18,7 @@ pub mod handlers;
 
 pub const LOGIN: &str = "/login";
 pub const DASHBOARD: &str = "/dashboard";
+pub const USER_INDEX: &str = "/dashboard/user_index";
 pub const TOKEN_COOKIE: &str = "rex_token";
 
 /* =================================================================

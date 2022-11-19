@@ -8,7 +8,7 @@ use tera::Context;
 
 use util_pb::user::QueryUserRequest;
 
-use crate::{error::Result, PMError, State, UserClaims, DASHBOARD, TOKEN_COOKIE};
+use crate::{error::Result, CommonClaims, PMError, State, UserClaims, DASHBOARD, TOKEN_COOKIE};
 
 type TeraHtml = Html<String>;
 pub type Redirect = (StatusCode, HeaderMap);
@@ -45,7 +45,6 @@ pub async fn page_login(Extension(state): Extension<State>) -> Result<TeraHtml> 
 
 #[debug_handler]
 pub async fn handler_login(
-    // req: Request<Body>,
     Form(form): Form<LoginForm>,
     Extension(state): Extension<State>,
 ) -> Result<Redirect> {
@@ -62,7 +61,7 @@ pub async fn handler_login(
         .await
         .map_err(|err| {
             println!("{:?}", err);
-            PMError::InnerSvcError("User")
+            PMError::InnerSvcError("User".into())
         })?
         .into_inner()
         .users;
@@ -82,12 +81,42 @@ pub async fn handler_login(
     Ok(redirect_with_cookies(DASHBOARD, cookie))
 }
 
-pub async fn page_dashboard(Extension(state): Extension<State>) -> Result<TeraHtml> {
+pub async fn page_dashboard(
+    CommonClaims(claims): CommonClaims<UserClaims>,
+    Extension(state): Extension<State>,
+) -> Result<TeraHtml> {
     let ctx = Context::new();
+
+    tracing::info!("{} logged in", claims.email);
     let page = state
         .tera
-        .render("dashboard.html", &ctx)
+        .render("dashboard/base.html", &ctx)
         .map_err(PMError::from)?;
+    Ok(Html(page))
+}
+
+pub async fn page_user(
+    CommonClaims(_claims): CommonClaims<UserClaims>,
+    Extension(state): Extension<State>,
+) -> Result<TeraHtml> {
+    let mut ctx = Context::new();
+
+    let query = QueryUserRequest::default();
+    let mut user_client = state.user_client.clone().unwrap();
+    let res = user_client
+        .query(query)
+        .await
+        .map_err(|err| PMError::InnerSvcError(err.to_string()))?;
+    let list = res.into_inner().users;
+
+    tracing::debug!("{:?}", list);
+    ctx.insert("list", &list);
+
+    let page = state
+        .tera
+        .render("dashboard/user_demonstration.html", &ctx)
+        .map_err(PMError::from)?;
+
     Ok(Html(page))
 }
 
