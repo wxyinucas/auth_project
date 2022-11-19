@@ -133,3 +133,12 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - 关于page-management 中 State的可变引用，是个比较大的问题。
 - html 标签里不能有标点。。。
   - 开发的方法还是生成一个file不停尝试。
+
+
+## Refactor Query
+- 看 tyr 的query 逻辑。
+- page-management/handlers: 插入新user不能重复，由postgres负责！
+- 这次重构的教训：
+  - 变与不变，test应该不变
+- DB:
+  - insert email with '{}' to allow @.

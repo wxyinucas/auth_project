@@ -23,38 +23,22 @@ pub struct CreateUserResponse {
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUserRequest {
-    #[prost(oneof = "query_user_request::Identity", tags = "1, 2")]
-    pub identity: ::core::option::Option<query_user_request::Identity>,
-}
-/// Nested message and enum types in `QueryUserRequest`.
-pub mod query_user_request {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Identity {
-        #[prost(int32, tag = "1")]
-        Id(i32),
-        #[prost(string, tag = "2")]
-        Email(::prost::alloc::string::String),
-    }
+    #[prost(int32, tag = "1")]
+    pub id: i32,
+    #[prost(string, tag = "2")]
+    pub email: ::prost::alloc::string::String,
+    #[prost(enumeration = "AccountStatus", tag = "3")]
+    pub status: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct QueryUserResponse {
-    #[prost(message, optional, tag = "1")]
-    pub users: ::core::option::Option<User>,
+    #[prost(message, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<User>,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteUserRequest {
-    #[prost(oneof = "delete_user_request::Identity", tags = "1, 2")]
-    pub identity: ::core::option::Option<delete_user_request::Identity>,
-}
-/// Nested message and enum types in `DeleteUserRequest`.
-pub mod delete_user_request {
-    #[derive(Clone, PartialEq, ::prost::Oneof)]
-    pub enum Identity {
-        #[prost(int32, tag = "1")]
-        Id(i32),
-        #[prost(string, tag = "2")]
-        Email(::prost::alloc::string::String),
-    }
+    #[prost(int32, tag = "1")]
+    pub id: i32,
 }
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct DeleteUserResponse {
@@ -66,8 +50,9 @@ pub struct DeleteUserResponse {
 )]
 #[repr(i32)]
 pub enum AccountStatus {
-    Active = 0,
-    Frozen = 1,
+    Unknown = 0,
+    Active = 1,
+    Frozen = 2,
 }
 impl AccountStatus {
     /// String value of the enum field names used in the ProtoBuf definition.
@@ -76,6 +61,7 @@ impl AccountStatus {
     /// (if the ProtoBuf definition does not change) and safe for programmatic use.
     pub fn as_str_name(&self) -> &'static str {
         match self {
+            AccountStatus::Unknown => "UNKNOWN",
             AccountStatus::Active => "ACTIVE",
             AccountStatus::Frozen => "FROZEN",
         }

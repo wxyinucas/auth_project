@@ -3,8 +3,7 @@ use sqlx::{Error, FromRow, Row};
 
 pub use pb::user;
 
-use crate::user::delete_user_request::Identity;
-use crate::user::{AccountStatus, User};
+use crate::user::{AccountStatus, DeleteUserRequest, QueryUserRequest, User};
 
 mod pb;
 
@@ -47,19 +46,55 @@ impl From<AS> for AccountStatus {
         }
     }
 }
-
 /* =================================================================
 
 
-    From Identity to Identity
+ Query to Sql
 
 
 ================================================================== */
-impl From<Identity> for user::query_user_request::Identity {
-    fn from(value: Identity) -> Self {
-        match value {
-            Identity::Id(id) => user::query_user_request::Identity::Id(id),
-            Identity::Email(email) => user::query_user_request::Identity::Email(email),
+pub trait ToSql {
+    fn to_sql(&self) -> String;
+}
+
+impl ToSql for QueryUserRequest {
+    fn to_sql(&self) -> String {
+        let condition1 = if self.status == 0 {
+            "True".into()
+        } else {
+            format!("status = {}", self.status)
+        };
+
+        let condition2 = if self.id == 0 {
+            "True".into()
+        } else {
+            format!("id = {}", self.id)
+        };
+        let condition3 = if self.email.is_empty() {
+            "True".into()
+        } else {
+            format!("email = '{}'", self.email)
+        };
+
+        format!(
+            "SELECT * FROM auth.users WHERE {} AND {} AND {}",
+            condition1, condition2, condition3
+        )
+    }
+}
+/* =================================================================
+
+
+From DeleteReq to QueryReq
+
+
+================================================================== */
+impl From<DeleteUserRequest> for QueryUserRequest {
+    fn from(value: DeleteUserRequest) -> Self {
+        Self {
+            id: value.id,
+            email: "".to_string(),
+            status: 0,
         }
     }
 }

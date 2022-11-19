@@ -2,7 +2,8 @@ use std::ops::Deref;
 
 use sqlx::{PgPool, Row};
 
-use util_pb::user::{query_user_request, CreateUserRequest, User};
+use util_pb::user::{CreateUserRequest, QueryUserRequest, User};
+use util_pb::ToSql;
 
 use crate::{
     error::{Result, UsersError},
@@ -29,20 +30,11 @@ impl Deref for UserDBPool {
 
 #[tonic::async_trait]
 impl UserDB for UserDBPool {
-    async fn query(&self, identity: query_user_request::Identity) -> Result<Option<User>> {
-        let query = match identity {
-            query_user_request::Identity::Id(id) => {
-                let sql = "SELECT * FROM auth.users WHERE id = $1";
-                sqlx::query_as(sql).bind(id)
-            }
-            query_user_request::Identity::Email(email) => {
-                let sql = "SELECT * FROM auth.users WHERE email = $1";
-                sqlx::query_as(sql).bind(email)
-            }
-        };
+    async fn query(&self, req: QueryUserRequest) -> Result<Vec<User>> {
+        let query = req.to_sql();
 
-        let row = query
-            .fetch_optional(self.deref())
+        let row = sqlx::query_as(&query)
+            .fetch_all(self.deref())
             .await
             .map_err(UsersError::from)?;
         Ok(row)
@@ -73,11 +65,12 @@ impl UserDB for UserDBPool {
 
 #[cfg(test)]
 mod tests {
-    use dotenv::dotenv;
-    use sqlx_db_tester::TestPg;
     use std::path::Path;
 
-    use util_pb::user::{query_user_request, CreateUserRequest};
+    use dotenv::dotenv;
+    use sqlx_db_tester::TestPg;
+
+    use util_pb::user::{CreateUserRequest, QueryUserRequest};
 
     use crate::db_pool::UserDBPool;
     use crate::traits::UserDB;
@@ -103,23 +96,25 @@ mod tests {
         assert_eq!(id, 1);
 
         // query
-        let identity1 = query_user_request::Identity::Id(id);
-        let user1 = user_db_pool
-            .query(identity1.clone())
-            .await
-            .unwrap()
-            .unwrap();
+        let identity1 = QueryUserRequest {
+            id,
+            ..QueryUserRequest::default()
+        };
+        let user1 = user_db_pool.query(identity1.clone()).await.unwrap();
 
-        let identity2 = query_user_request::Identity::Email("rex@mail.com".to_string());
-        let user2 = user_db_pool.query(identity2).await.unwrap().unwrap();
+        let identity2 = QueryUserRequest {
+            email: "rex@mail.com".to_string(),
+            ..QueryUserRequest::default()
+        };
+        let user2 = user_db_pool.query(identity2).await.unwrap();
 
         assert_eq!(user1, user2);
 
         // delete
         let user3 = user_db_pool.delete(id).await.unwrap();
-        assert_eq!(user1, user3);
+        assert_eq!(user1[0], user3);
 
         let res = user_db_pool.query(identity1).await.unwrap();
-        assert!(res.is_none());
+        assert!(res.is_empty());
     }
 }

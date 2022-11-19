@@ -42,7 +42,7 @@ impl UserService for UserInnerService {
         let req = request.into_inner();
         let users = self
             .db_pool
-            .query(req.identity.unwrap())
+            .query(req)
             .await
             .map_err(|err| Status::internal(err.to_string()))?;
 
@@ -56,15 +56,18 @@ impl UserService for UserInnerService {
         let req = request.into_inner();
         let user = self
             .db_pool
-            .query(req.identity.unwrap().into())
+            .query(req.into())
             .await
             .map_err(|err| Status::internal(err.to_string()))?;
-        if user.is_none() {
+        if user.is_empty() {
             return Err(Status::data_loss("User does not exist"));
+        } else if user.len() > 1 {
+            return Err(Status::out_of_range("More than one user found"));
         }
+
         let user = self
             .db_pool
-            .delete(user.unwrap().id)
+            .delete(user[0].id)
             .await
             .map_err(|err| Status::internal(err.to_string()))?;
 
@@ -75,11 +78,10 @@ impl UserService for UserInnerService {
 
 #[cfg(test)]
 mod tests {
-    use dotenv::dotenv;
-    use sqlx_db_tester::TestPg;
     use std::path::Path;
 
-    use util_pb::user::query_user_request::Identity;
+    use dotenv::dotenv;
+    use sqlx_db_tester::TestPg;
 
     use super::*;
 
@@ -108,20 +110,20 @@ mod tests {
 
         // query
         let query_req1 = Request::new(QueryUserRequest {
-            identity: Some(Identity::Id(id)),
+            id,
+            ..QueryUserRequest::default()
         });
         let query_res1 = inner_service.query(query_req1).await.unwrap().into_inner();
 
         let query_req2 = Request::new(QueryUserRequest {
-            identity: Some(Identity::Email("rex@mail.com".to_string())),
+            email: "rex@mail.com".to_string(),
+            ..QueryUserRequest::default()
         });
         let query_res2 = inner_service.query(query_req2).await.unwrap().into_inner();
         assert_eq!(query_res1, query_res2);
 
         // delete
-        let delete_req = Request::new(DeleteUserRequest {
-            identity: Some(util_pb::user::delete_user_request::Identity::Id(1)),
-        });
+        let delete_req = Request::new(DeleteUserRequest { id: 1 });
         let delete_res = inner_service.delete(delete_req).await.unwrap().into_inner();
         assert_eq!(delete_res.user.unwrap().password, String::from("rex"));
     }

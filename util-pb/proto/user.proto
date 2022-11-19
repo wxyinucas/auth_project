@@ -10,8 +10,9 @@ message User{
 }
 
 enum AccountStatus{
-	ACTIVE = 0;
-	FROZEN = 1;
+	UNKNOWN = 0;
+	ACTIVE = 1;
+	FROZEN = 2;
 }
 
 message CreateUserRequest{
@@ -24,22 +25,17 @@ message CreateUserResponse{
 }
 
 message QueryUserRequest{
-	oneof identity{
-		int32 id = 1;
-		string email = 2;
-	}
-//	AccountStatus status = 3;
+	int32 id = 1;
+	string email = 2;
+	AccountStatus status = 3;
 }
 
 message QueryUserResponse{
-	optional User users = 1;
+	repeated User users = 1;
 }
 
 message DeleteUserRequest{
-	oneof identity{
 		int32 id = 1;
-		string email = 2;
-	}
 }
 
 message DeleteUserResponse{
@@ -48,6 +44,6 @@ message DeleteUserResponse{
 
 service UserService{
 	rpc create(CreateUserRequest) returns (CreateUserResponse);
-	rpc query(QueryUserRequest) returns (QueryUserResponse);
+	rpc query(QueryUserRequest) returns (QueryUserResponse); // TODO stream in future
 	rpc delete(DeleteUserRequest) returns (DeleteUserResponse);
 }

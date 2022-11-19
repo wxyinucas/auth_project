@@ -1,5 +1,5 @@
+#![allow(clippy::all, unused_imports, dead_code)]
 use svc_users::svc_users;
-use util_pb::user::query_user_request::Identity;
 use util_pb::user::QueryUserRequest;
 
 #[tokio::main]
@@ -14,7 +14,8 @@ async fn main() {
     let mut client = client.await.unwrap();
 
     let query = QueryUserRequest {
-        identity: Some(Identity::Id(1)),
+        id: 1,
+        ..QueryUserRequest::default()
     };
     let res = client.query(query).await.unwrap().into_inner();
     println!("{:?}", res);

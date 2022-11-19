@@ -6,7 +6,6 @@ use axum_macros::debug_handler;
 use serde::Deserialize;
 use tera::Context;
 
-use util_pb::user::query_user_request::Identity;
 use util_pb::user::QueryUserRequest;
 
 use crate::{error::Result, PMError, State, UserClaims, DASHBOARD, TOKEN_COOKIE};
@@ -51,7 +50,8 @@ pub async fn handler_login(
     Extension(state): Extension<State>,
 ) -> Result<Redirect> {
     let query = QueryUserRequest {
-        identity: Some(Identity::Email(form.email.clone())),
+        email: form.email.clone(),
+        ..QueryUserRequest::default()
     };
 
     let user_client = state.user_client.clone();
@@ -66,7 +66,7 @@ pub async fn handler_login(
         })?
         .into_inner()
         .users;
-    if user.is_none() || user.unwrap().password != form.password {
+    if user.is_empty() || user[0].password != form.password {
         return Err(PMError::AuthError);
     }
 
