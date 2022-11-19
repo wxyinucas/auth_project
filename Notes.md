@@ -1,6 +1,10 @@
-## 开发笔记
+# 开发笔记
 
-### 开发 util-pb
+## 之后必学
+- `stream`
+
+
+## 开发 util-pb
 
 - 感觉`tonic_build`或`prost-build`值得一看，
 
@@ -13,7 +17,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - QueryResponse 可以再考率：只有"查"可能没有结果，所以可以用option。
   但是查也要支持"多返回值"，所以，需要改这个设计。
 
-### 开发 util-auth
+## 开发 util-auth
 
 - 首先，加密需要么？这个问题需要以后回答。
 
@@ -25,7 +29,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - cargo test 能不能别doc test，看着头晕。
   solution : ` cargo test --all-targets`
 
-### 开发 page-management
+## 开发 page-management
 
 - 目标：
     - tera
@@ -83,7 +87,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - 通过 tyr chen 的例子学auth 结构
 - 各种 test 的增加
 
-### 开发 util-auth v2
+## 开发 util-auth v2
 
 - 思考，范型夹在哪里，用幽灵结构放在 struct 还是放在函数？
     - 放在具体函数里，这样Jwt可以在同一个服务中处理不同类型的Claims（虽然可能不会有这种需求）
@@ -100,7 +104,7 @@ println!("cargo:rerun-if-changed=proto/user.proto");
     - 将配套css js 都放到assets下，修改html中对应路径
 - 重新考虑 CommonClaims 和 Jwt 泛型的关系
 
-### 开发 svc-users
+## 开发 svc-users
 
 - 现在的问题，如何实现trait UserService，为什么 tyr 又做了一层抽象？
     - 好像是，有一层抽象是用于和db交互的，US这一层是用于 gRPC 的。
