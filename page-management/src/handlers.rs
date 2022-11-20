@@ -7,7 +7,7 @@ use serde::Deserialize;
 use tera::Context;
 
 use svc_users::UserId;
-use util_pb::user::QueryUserRequest;
+use util_pb::user::{CreateUserRequest, DeleteUserRequest, QueryUserRequest};
 
 use crate::{error::Result, CommonClaims, PMError, State, UserClaims, DASHBOARD, TOKEN_COOKIE};
 
@@ -72,15 +72,55 @@ pub async fn handler_login(
     Ok(redirect_with_cookies(DASHBOARD, cookie))
 }
 
-pub async fn handler_user_add() -> Result<TeraHtml> {
-    todo!()
+pub async fn handler_user_add(
+    Form(form): Form<AddUserForm>,
+    CommonClaims(_claims): CommonClaims<UserClaims>,
+    Extension(state): Extension<State>,
+) -> Result<Redirect> {
+    tracing::info!("User {} is creating.", &form.email);
+    let req = CreateUserRequest {
+        email: form.email,
+        password: form.password,
+    };
+
+    let user_client = state.user_client.clone();
+    let _res = user_client
+        .unwrap()
+        .create(req)
+        .await
+        .map_err(|e| PMError::InnerSvcError(e.to_string()))?;
+    tracing::info!("Created");
+    Ok(redirect_with_cookies(
+        "/dashboard/users?msg='User added'",
+        None,
+    ))
 }
-pub async fn handler_user_edit() -> Result<TeraHtml> {
+
+pub async fn handler_user_edit(
+    Form(_form): Form<EditForm>,
+    CommonClaims(_claims): CommonClaims<UserClaims>,
+    Extension(_state): Extension<State>,
+) -> Result<Redirect> {
     todo!()
 }
 
-pub async fn handler_user_delete() -> Result<TeraHtml> {
-    todo!()
+pub async fn handler_user_delete(
+    Path(id): Path<UserId>,
+    CommonClaims(_claims): CommonClaims<UserClaims>,
+    Extension(state): Extension<State>,
+) -> Result<Redirect> {
+    tracing::info!("User {} is deleting.", id);
+    let query = DeleteUserRequest { id };
+    let user_client = state.user_client.clone();
+    let _res = user_client
+        .unwrap()
+        .delete(query)
+        .await
+        .map_err(|err| PMError::InnerSvcError(err.to_string()))?;
+    Ok(redirect_with_cookies(
+        "/dashboard/users?msg='User deleted'",
+        None,
+    ))
 }
 /* =================================================================
 
@@ -165,8 +205,17 @@ pub async fn page_user_edit(
     Ok(Html(page))
 }
 
-pub async fn page_user_add() -> Result<TeraHtml> {
-    todo!()
+pub async fn page_user_add(
+    CommonClaims(_claims): CommonClaims<UserClaims>,
+    Extension(state): Extension<State>,
+) -> Result<TeraHtml> {
+    let ctx = Context::new();
+
+    let page = state
+        .tera
+        .render("dashboard/user_add.html", &ctx)
+        .map_err(PMError::from)?;
+    Ok(Html(page))
 }
 
 /* =================================================================
@@ -185,6 +234,12 @@ pub struct LoginForm {
 
 #[derive(Debug, Deserialize)]
 pub struct EditForm {
+    pub email: String,
+    pub password: String,
+}
+
+#[derive(Debug, Deserialize)]
+pub struct AddUserForm {
     pub email: String,
     pub password: String,
 }

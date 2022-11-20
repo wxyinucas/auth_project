@@ -3,6 +3,10 @@
 ## 之后必学
 
 - `stream`
+- headless browser test
+- 两个分支：
+  - 一个增加功能生成完整blog
+  - 一个增加功能优雅停机和部署
 
 ## 开发 util-pb
 

@@ -1,9 +1,9 @@
 {% extends "dashboard/base.html" %}
-{% block title %}Edit User{% endblock %}
+{% block title %}Add User{% endblock %}
 {%block toolbar%}{% include "dashboard/toolbar.html" %} {% endblock %}
 {%block content%}
-<form method="post" action="/dashboard/users/edit/{{user.id}}">
-    <input type="hidden" value="{{user.id}}" name="id">
+<form method="post" action="/dashboard/users/add">
+
     <div class="form-floating">
         <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com">
         <label for="email">Email address</label>
