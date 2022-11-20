@@ -1,0 +1,27 @@
+{% extends "dashboard/base.html" %}
+{% block title %}All Users{% endblock %}
+{%block toolbar%}{% include "dashboard/toolbar.html" %} {% endblock %}
+{%block content%}
+<table class="table table-striped table-hover">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Email</th>
+        <th>Operation</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for user in list%}
+    <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.email}}</td>
+        <td>
+            <a href="/dashboard/users/edit/{{ user.id }}" class="btn btn-primary btn-sm">Modify</a>
+            <a href="/dashboard/users/delete/{{ user.id }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Do delete {{ user.email}}?');">Delete</a>
+        </td>
+    </tr>
+    {%endfor%}
+    </tbody>
+</table>
+{% endblock %}

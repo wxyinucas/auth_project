@@ -11,6 +11,8 @@ pub mod error;
 pub mod service;
 pub mod traits;
 
+pub type UserId = i32;
+
 pub async fn svc_users() -> (
     impl Future<Output = Result<(), Error>>,
     impl Future<Output = Result<UserServiceClient<Channel>, Error>>,

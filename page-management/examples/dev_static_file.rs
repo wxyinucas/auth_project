@@ -8,6 +8,7 @@ use tera::Tera;
 use tower_http::services::ServeDir;
 
 use page_management::handlers::{handler_login, page_dashboard, page_login};
+use page_management::router::pm_router;
 use page_management::{CommonClaims, State, UserClaims, DASHBOARD, LOGIN};
 use util_auth::Jwt;
 
@@ -17,21 +18,17 @@ async fn main() {
     let tera = Tera::new("page-management/template/**/*.html").unwrap();
     let state = State::new(jwt, tera, None);
 
-    let app = Router::new()
-        .route(LOGIN, get(page_login).post(handler_login))
-        .route(DASHBOARD, get(page_dashboard))
-        .layer(Extension(state))
-        .nest(
-            "/assets",
-            get_service(ServeDir::new("page-management/template/assets")).handle_error(
-                |err| async move {
-                    (
-                        StatusCode::INTERNAL_SERVER_ERROR,
-                        format!("处理静态资源出错：{:?}", err),
-                    )
-                },
-            ),
-        );
+    let app = pm_router().layer(Extension(state)).nest(
+        "/assets",
+        get_service(ServeDir::new("page-management/template/assets")).handle_error(
+            |err| async move {
+                (
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    format!("处理静态资源出错：{:?}", err),
+                )
+            },
+        ),
+    );
 
     axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
         .serve(app.into_make_service())

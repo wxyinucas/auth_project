@@ -7,7 +7,8 @@ use util_pb::ToSql;
 
 use crate::{
     error::{Result, UsersError},
-    traits::{UserDB, UserId},
+    traits::UserDB,
+    UserId,
 };
 
 pub struct UserDBPool {

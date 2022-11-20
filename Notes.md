@@ -1,8 +1,8 @@
 # 开发笔记
 
 ## 之后必学
-- `stream`
 
+- `stream`
 
 ## 开发 util-pb
 
@@ -126,21 +126,29 @@ println!("cargo:rerun-if-changed=proto/user.proto");
 - 肯定要重新学习 `stream`
 
 ## 开发 svc-users 与 page-management 的联合接口
+
 - fn `svc_users()`，脑洞打开的函数，并不优雅，但是锻炼了使用spawn的技巧。
-  - 可以利用 spawn 进行一些逻辑上的组合，但是没啥实际用途。
+    - 可以利用 spawn 进行一些逻辑上的组合，但是没啥实际用途。
 - CommonClaims 的 test 在哪里？
 - 在 page-management 的InnerState 中，将新的服务用Option 包装，以和旧功能匹配。
 - 关于page-management 中 State的可变引用，是个比较大的问题。
 - html 标签里不能有标点。。。
-  - 开发的方法还是生成一个file不停尝试。
-
+    - 开发的方法还是生成一个file不停尝试。
 
 ## Refactor Query
+
 - 看 tyr 的query 逻辑。
+    - 我的开发流程是不是反馈太慢？新功能测试能不能更快？
 - page-management/handlers: 插入新user不能重复，由postgres负责！
+    - *设计 user 的增删查改明显很欠考虑。（注意！！！）*
 - 这次重构的教训：
-  - 变与不变，test应该不变
+    - 变与不变，test应该不变
 - DB:
-  - insert email with '{}' to allow @.
+    - insert email with '{}' to allow @.
 - Handlers:
-  - FromRequest claims 功能意外的好用。
+    - FromRequest claims 功能意外的好用。
+- Router 的逻辑需要改
+    - static file 能放在更好的位置吗？
+    - fallback的逻辑更好是什么？
+    - Router html handler-redirect，url 的 描述？
+- 在开发 page_user_edit 时，很顺利，但是不知道自己在干什么，需要额外的思考和反思。

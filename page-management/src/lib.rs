@@ -15,6 +15,7 @@ use crate::error::PMError;
 
 pub mod error;
 pub mod handlers;
+pub mod router;
 
 pub const LOGIN: &str = "/login";
 pub const DASHBOARD: &str = "/dashboard";

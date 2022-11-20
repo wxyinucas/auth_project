@@ -1,0 +1,17 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{{ super() }}All Users{% endblock %}
+{%block toolbar%}{{ super() }}{% include "dashboard/toolbar.html" %} {% endblock %}
+{%block content%}
+{{ super() }}
+<form method="post" action="/dashboard/users/edit/{{user.id}}">
+    <input type="hidden" value="{{user.id}}" name="id">
+    <div class="mb-3">
+        <label for="email" class="form-label">email</label>
+        <input type="text" name="name" id="email" class="form-control" placeholder="email" value="{{ user.email}}">
+        <label for="password" class="form-label">password</label>
+        <input type="text" name="password" id="password" class="form-control" placeholder="password"
+               value="{{ user.password}}">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

@@ -1,8 +1,7 @@
 use util_pb::user::{CreateUserRequest, QueryUserRequest, User};
 
 use crate::error::Result;
-
-pub(crate) type UserId = i32;
+use crate::UserId;
 
 #[tonic::async_trait]
 pub trait UserDB {
