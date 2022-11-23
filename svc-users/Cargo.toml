@@ -15,7 +15,7 @@ tracing-subscriber = "0.3"
 serde = { version = "1", features = ["derive"] }
 sqlx = { version = "0.6.2", features = ["postgres", "runtime-tokio-rustls"] }
 
-thiserror = "1"
+thiserror = "=1.0.36"
 dotenv = "0.15"
 
 util-pb = { path = "../util-pb" }
